@@ -8,7 +8,7 @@ public class TransportCostVisitor implements MuseumVisitor {
 
     @Override
     public void visitPainting(Painting painting) {
-        double areaSquareMeters = painting.getWidthCm() * painting.getHeightCm() / 10_000.0;
+        double areaSquareMeters = painting.getWidthCm() / 100.0 * painting.getHeightCm() / 100.0;
         totalCost += PAINTING_BASE_COST + areaSquareMeters * PAINTING_COST_PER_SQUARE_METER;
     }
 

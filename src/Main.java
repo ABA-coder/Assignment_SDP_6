@@ -1,9 +1,10 @@
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 public class Main {
     public static void main(String[] args) {
-        List<MuseumItem> items = List.of(
+        List<MuseumItem> items = Arrays.asList(
                 new Painting("Mountain Dawn", 100, 80, 68),
                 new CeramicArtifact("Ancient Vase", 2.5, true)
         );

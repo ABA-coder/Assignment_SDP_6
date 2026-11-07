@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PreservationVisitor implements MuseumVisitor {
@@ -21,6 +22,6 @@ public class PreservationVisitor implements MuseumVisitor {
     }
 
     public List<String> getTasks() {
-        return List.copyOf(tasks);
+        return Collections.unmodifiableList(new ArrayList<>(tasks));
     }
 }
