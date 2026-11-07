@@ -49,5 +49,3 @@ java -cp build VisitorTest
 6. **Small methods and named constants:** each visit method handles one item type. I gave the price rates and humidity limit names so the numbers are understandable.
 
 Visitor fits this example because the item types are stable, while I may want to add more operations later. The trade-off is that adding a new item type would require a new method in `MuseumVisitor` and changes in both existing visitors.
-
-I put short answers for the paper defense in `DEFENSE.md`.
