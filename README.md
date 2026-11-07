@@ -32,13 +32,6 @@ Inspect crack in Ancient Vase
 
 I used simple example prices. The painting costs `100 + (100 × 80 ÷ 10,000) × 50 = 140` to transport. The ceramic artifact costs `30 + 2.5 × 12 = 60`. Together they cost `200`.
 
-I also added a small test without extra libraries. To run it after compiling the main code:
-
-```powershell
-javac -cp build -d build tests/VisitorTest.java
-java -cp build VisitorTest
-```
-
 ## Clean Code choices
 
 1. **Meaningful names:** the element classes describe museum items, and the visitor classes describe what they do. This makes their roles easy to find.
