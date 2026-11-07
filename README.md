@@ -1,20 +1,20 @@
-# Visitor Pattern: Museum Storage
+# Assignment 6: Visitor Pattern
 
-This small Java program uses the Visitor pattern for two separate operations on museum items: estimating transport cost and checking preservation needs. The topic should be confirmed as unique within the group before submission.
+I chose museum storage as the topic for this assignment. My program has two types of items: a painting and a ceramic artifact. I use two visitors to do different jobs with those items: calculate transport cost and find preservation tasks.
 
-## Requirements map
+## How the pattern is used
 
-| Assignment requirement | Where it is implemented |
-| --- | --- |
-| Element interface with `accept(Visitor)` | `MuseumItem.java` |
-| Two concrete elements with double dispatch | `Painting.java`, `CeramicArtifact.java` |
-| Visitor interface with one method per element | `MuseumVisitor.java` |
-| Two visitors, each handling both elements | `TransportCostVisitor.java`, `PreservationVisitor.java` |
-| Client traverses an object collection | The `List<MuseumItem>` loop in `Main.java` |
+- `MuseumItem` is the element interface. It declares `accept(MuseumVisitor visitor)`.
+- `Painting` and `CeramicArtifact` are the concrete elements. Each `accept` method calls its own `visit...` method and passes `this`.
+- `MuseumVisitor` declares one visit method for each concrete element.
+- `TransportCostVisitor` and `PreservationVisitor` implement both visit methods, but each visitor has a different job.
+- In `Main`, I keep the items in a `List<MuseumItem>` and call `accept` on each item.
 
-## Run
+This is double dispatch: Java first chooses the concrete item's `accept` method, then the correct visitor method is called for that item. I do not use `instanceof` to check item types.
 
-Use JDK 17 or newer. From the repository root in PowerShell:
+## How to run
+
+I used JDK 17. In PowerShell, run these commands from the project folder:
 
 ```powershell
 New-Item -ItemType Directory -Force build | Out-Null
@@ -22,14 +22,7 @@ javac -d build src/*.java
 java -cp build Main
 ```
 
-To run the small dependency-free checks:
-
-```powershell
-javac -cp build -d build tests/VisitorTest.java
-java -cp build VisitorTest
-```
-
-Expected output:
+The output is:
 
 ```text
 Transport cost: 200.00
@@ -37,17 +30,24 @@ Adjust humidity for Mountain Dawn
 Inspect crack in Ancient Vase
 ```
 
-The sample prices are illustrative currency units. Painting transport costs `100 + area in m² × 50`: `100 + (100 × 80 ÷ 10,000) × 50 = 140`. Ceramic transport costs `30 + weight in kg × 12`: `30 + 2.5 × 12 = 60`. Total: `200`.
+I used simple example prices. The painting costs `100 + (100 × 80 ÷ 10,000) × 50 = 140` to transport. The ceramic artifact costs `30 + 2.5 × 12 = 60`. Together they cost `200`.
 
-## Clean Code decisions
+I also added a small test without extra libraries. To run it after compiling the main code:
 
-1. **Meaningful names:** `Painting` and `CeramicArtifact` name the elements; `TransportCostVisitor` and `PreservationVisitor` name the operations. Responsibilities are visible in the class names.
-2. **Single Responsibility:** each visitor performs one operation across every element type. Transport pricing and preservation rules are separate.
-3. **No type-checking chains:** there is no `instanceof` or class-name comparison. Each element selects its matching `visit...` method in `accept`.
-4. **Encapsulation:** element fields are private and immutable. Visitors read only the values needed for their operation through getters, so no visitor can change element state.
-5. **Open for new operations:** a third visitor can implement `MuseumVisitor` and be used with the existing elements without changing those element classes.
-6. **Small methods and named constants:** each `visit...` handles one element. Pricing rates and the humidity threshold have descriptive names instead of unexplained numbers.
+```powershell
+javac -cp build -d build tests/VisitorTest.java
+java -cp build VisitorTest
+```
 
-The trade-off is that adding a **new element type** would require a new method in `MuseumVisitor` and implementations in every concrete visitor. Visitor is most suitable when the element types are relatively stable and new operations are more common.
+## Clean Code choices
 
-See `DEFENSE.md` for a short explanation of double dispatch and practice questions.
+1. **Meaningful names:** the element classes describe museum items, and the visitor classes describe what they do. This makes their roles easy to find.
+2. **Single Responsibility:** `TransportCostVisitor` only calculates cost. `PreservationVisitor` only collects preservation tasks. I kept these rules out of the item classes.
+3. **No type-checking chains:** the elements call the matching visit methods directly, so I do not need `instanceof` or casts.
+4. **Encapsulation:** item fields are private and final. Visitors use getters for the values they need and cannot change the items.
+5. **Easy to add a new operation:** I can add another class implementing `MuseumVisitor` without editing `Painting` or `CeramicArtifact`.
+6. **Small methods and named constants:** each visit method handles one item type. I gave the price rates and humidity limit names so the numbers are understandable.
+
+Visitor fits this example because the item types are stable, while I may want to add more operations later. The trade-off is that adding a new item type would require a new method in `MuseumVisitor` and changes in both existing visitors.
+
+I put short answers for the paper defense in `DEFENSE.md`.
